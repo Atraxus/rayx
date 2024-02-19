@@ -74,6 +74,7 @@ jobs:
         if: matrix.os == 'windows-latest'
         uses: actions/upload-artifact@v4
         with:
+          name: ${{ matrix.artifact-name }}
           path: ${{github.workspace}}/build/RAYX-*-win64.zip
           if-no-files-found: error
           
@@ -81,13 +82,13 @@ jobs:
         if: matrix.os == 'ubuntu-latest'
         uses: actions/upload-artifact@v4
         with:
+          name: ${{ matrix.artifact-name }}
           path: ${{github.workspace}}/build/RAYX-*-Linux.deb
           if-no-files-found: error
 
       - name: Extract version from tag
         id: get_version
-        run: |
-          echo "version=${GITHUB_REF#refs/tags/v}" >> $GITHUB_OUTPUT
+        run: echo "version=${GITHUB_REF#refs/tags/v}" >> $GITHUB_ENV
 
       - name: Create and Upload Release
         uses: softprops/action-gh-release@v1
@@ -95,8 +96,9 @@ jobs:
         with:
           body_path: ${{github.workspace}}/CHANGELOG.md
           files: |
-            ${{github.workspace}}/artifacts/RAYX-${{ steps.get_version.outputs.version }}-win64.zip
-            ${{github.workspace}}/artifacts/RAYX-${{ steps.get_version.outputs.version }}-Linux.deb
+            ${{github.workspace}}/${{ matrix.artifact-name }}/RAYX-${{ env.version }}-win64.zip
+            ${{github.workspace}}/${{ matrix.artifact-name }}/RAYX-${{ env.version }}-Linux.deb
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
 
