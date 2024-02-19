@@ -74,15 +74,15 @@ jobs:
         if: matrix.os == 'windows-latest'
         uses: actions/upload-artifact@v3
         with:
-          name: ${{ matrix.artifact-name }}
           path: ${{github.workspace}}/build/RAYX-*-win64.zip
-
+          if-no-files-found: error
+          
       - name: Upload build artifact (Ubuntu)
         if: matrix.os == 'ubuntu-latest'
         uses: actions/upload-artifact@v3
         with:
-          name: ${{ matrix.artifact-name }}
           path: ${{github.workspace}}/build/RAYX-*-Linux.deb
+          if-no-files-found: error
 
   create-release:
     needs: build-and-release
@@ -108,9 +108,12 @@ jobs:
       - name: List downloaded artifacts and contents
         run: |
           ls -lah ${{github.workspace}}/artifacts
-          ls -lah ${{github.workspace}}/artifacts/rayx-Linux.deb
-          ls -lah ${{github.workspace}}/artifacts/rayx-win64.zip
 
+      - name: Extract version from tag
+        id: get_version
+        run: echo "::set-output name=version::${GITHUB_REF#refs/tags/v}"
+        env:
+          GITHUB_REF: ${{ github.ref }}
 
       - name: Upload Artifact to Release (Windows)
         uses: actions/upload-release-asset@v1
@@ -118,8 +121,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ${{github.workspace}}/artifacts/rayx-win64.zip/RAYX-0.18.0-win64.zip
-          asset_name: RAYX-0.18.0-win64.zip
+          asset_path: ${{github.workspace}}/artifacts/RAYX-${{ steps.get_version.outputs.version }}-win64.zip
+          asset_name: RAYX-${{ steps.get_version.outputs.version }}-win64.zip
           asset_content_type: application/zip
 
       - name: Upload Artifact to Release (Ubuntu)
@@ -128,6 +131,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ${{github.workspace}}/artifacts/rayx-Linux.deb/RAYX-0.18.0-Linux.deb
-          asset_name: RAYX-0.18.0-Linux.deb
+          asset_path: ${{github.workspace}}/artifacts/RAYX-${{ steps.get_version.outputs.version }}-Linux.deb
+          asset_name: RAYX-${{ steps.get_version.outputs.version }}-Linux.deb
           asset_content_type: application/x-deb
