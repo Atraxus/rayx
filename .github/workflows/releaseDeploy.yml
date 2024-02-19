@@ -105,6 +105,9 @@ jobs:
           draft: false
           prerelease: false
 
+      - name: List downloaded artifacts
+        run: ls -lah ${{github.workspace}}/artifacts
+
       - name: Upload Artifact to Release (Windows)
         uses: actions/upload-release-asset@v1
         env:
