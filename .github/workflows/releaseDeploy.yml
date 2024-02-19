@@ -121,7 +121,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ${{github.workspace}}/artifacts/RAYX-${{ steps.get_version.outputs.version }}-win64.zip
+          asset_path: ${{github.workspace}}/artifacts/artifact/RAYX-${{ steps.get_version.outputs.version }}-win64.zip
           asset_name: RAYX-${{ steps.get_version.outputs.version }}-win64.zip
           asset_content_type: application/zip
 
@@ -131,6 +131,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ${{github.workspace}}/artifacts/RAYX-${{ steps.get_version.outputs.version }}-Linux.deb
+          asset_path: ${{github.workspace}}/artifacts/artifact/RAYX-${{ steps.get_version.outputs.version }}-Linux.deb
           asset_name: RAYX-${{ steps.get_version.outputs.version }}-Linux.deb
           asset_content_type: application/x-deb
