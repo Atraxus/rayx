@@ -84,14 +84,6 @@ jobs:
           path: ${{github.workspace}}/build/RAYX-*-Linux.deb
           if-no-files-found: error
 
-  create-release:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Download Artifacts
-        uses: actions/download-artifact@v4
-        with:
-          path: ${{github.workspace}}/artifacts
-
       - name: Extract version from tag
         id: get_version
         run: |
@@ -101,6 +93,7 @@ jobs:
         uses: softprops/action-gh-release@v1
         if: startsWith(github.ref, 'refs/tags/')
         with:
+          body_path: ${{github.workspace}}/CHANGELOG.md
           files: |
             ${{github.workspace}}/artifacts/RAYX-${{ steps.get_version.outputs.version }}-win64.zip
             ${{github.workspace}}/artifacts/RAYX-${{ steps.get_version.outputs.version }}-Linux.deb
