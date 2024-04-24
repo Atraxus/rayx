@@ -33,8 +33,20 @@ jobs:
         uses: humbletim/setup-vulkan-sdk@v1.2.0
         with:
           vulkan-query-version: 1.3.204.0
-          vulkan-components: Vulkan-Headers, Vulkan-Loader, SPIRV-Tools, Glslang 
+          vulkan-components: Vulkan-Headers, Vulkan-Loader, SPIRV-Tools
           vulkan-use-cache: true
+          
+      - name: Install glslangValidator (Windows)
+        if: matrix.os == 'windows-latest'
+        run: |
+          choco install glslang
+        shell: powershell
+
+      - name: Install glslangValidator (Ubuntu)
+        if: matrix.os == 'ubuntu-latest'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y glslang-tools
 
       - name: Install dependencies (Windows)
         if: matrix.os == 'windows-latest'
