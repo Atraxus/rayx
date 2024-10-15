@@ -141,15 +141,20 @@ BundleHistory SimpleTracer<Acc>::trace(const Beamline& b, Sequential seq, uint64
         for (const auto& e : b.m_DesignElements) elements.push_back(e.compile());
         return elements;
     };
+    RAYX_VERB << "Acquiring beamline info and seed...";
     const auto elements = extractElements();
     const auto rays = b.getInputRays(getInputRaysThreadCount);
     const auto materialTables = b.calcMinimalMaterialTables();
     const auto randomSeed = randomDouble();
 
+    RAYX_VERB << "Getting CPU...";
     const auto cpu = getDevice<Cpu>(0);
+    RAYX_VERB << "Getting accelerator with index" << m_deviceIndex;
     const auto acc = getDevice<Acc>(m_deviceIndex);
+    RAYX_VERB << "Setting up Queue...";
     auto q = Queue(acc);
 
+    RAYX_VERB << "Setting up buffers...";
     const auto firstBatchSize = static_cast<Idx>(glm::min(rays.size(), maxBatchSize));
     const auto maxOutputEventsCount = static_cast<Idx>(maxBatchSize * maxEvents);
     const auto initialCompactEventsSize = static_cast<Idx>(maxBatchSize * glm::min(2u, maxEvents));
@@ -166,6 +171,7 @@ BundleHistory SimpleTracer<Acc>::trace(const Beamline& b, Sequential seq, uint64
     BundleHistory result;
 
     // iterate over all batches.
+    RAYX_VERB << "Start iterating over batches...";
     for (int batch_id = 0; batch_id * maxBatchSize < rays.size(); batch_id++) {
         // `rayIdStart` is the ray-id of the first ray of this batch.
         // All previous batches consisted of `maxBatchSize`-many rays.

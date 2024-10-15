@@ -109,6 +109,7 @@ MaterialTables loadMaterialTables(std::array<bool, 92> relevantMaterials) {
         out.materialTable.push_back(0);
     }
 
+    RAYX_VERB << "Done loading material tables.";
     return out;
 }
 
