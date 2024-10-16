@@ -47,6 +47,7 @@ bool PalikTable::load(const char* element, PalikTable* out) {
 
     out->m_element = element;
 
+    RAYX_VERB << "Done loading: " << f;
     return true;
 }
 
