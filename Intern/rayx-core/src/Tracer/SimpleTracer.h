@@ -147,9 +147,11 @@ BundleHistory SimpleTracer<Acc>::trace(const Beamline& b, Sequential seq, uint64
     const auto materialTables = b.calcMinimalMaterialTables();
     const auto randomSeed = randomDouble();
 
-    RAYX_VERB << "Setting up device...";
+    RAYX_VERB << "Getting CPU...";
     const auto cpu = getDevice<Cpu>(0);
+    RAYX_VERB << "Getting accelerator with index" << m_deviceIndex;
     const auto acc = getDevice<Acc>(m_deviceIndex);
+    RAYX_VERB << "Setting up Queue...";
     auto q = Queue(acc);
 
     RAYX_VERB << "Setting up buffers...";
