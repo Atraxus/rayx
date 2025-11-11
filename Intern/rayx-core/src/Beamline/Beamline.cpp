@@ -260,11 +260,28 @@ std::unique_ptr<BeamlineNode> Group::releaseNodeFromTree(const BeamlineNode* nod
 
 MaterialTables Group::calcMinimalMaterialTables() const {
     auto elements = getElements();
-    std::array<bool, 92> relevantMaterials{};
+    std::array<bool, 133> relevantMaterials{};
     relevantMaterials.fill(false);
     for (const auto& elemPtr : elements) {
+        auto coating = elemPtr->getCoating();
+        std::cout << "Element " << elemPtr->getName() << " coating type: " << "\n";
+        if (coating.is<detail::CoatingTypes::OneCoating>()) {
+            int materialcoating = static_cast<int>(elemPtr->getMaterialCoating());
+            if (materialcoating >= 1 && materialcoating <= 133) {
+                relevantMaterials[materialcoating - 1] = true;
+            }
+        } else if (coating.is<detail::CoatingTypes::MultilayerCoating>()) {
+            auto mlCoating = coating.get<detail::CoatingTypes::MultilayerCoating>();
+            for (const auto& mat : mlCoating.material) {
+                if (mat >= 1 && mat <= 133) {
+                    relevantMaterials[mat - 1] = true;
+                }
+            }
+        }
         int material = static_cast<int>(elemPtr->getMaterial());  // assuming getMaterial() exists
-        if (material >= 1 && material <= 92) { relevantMaterials[material - 1] = true; }
+        if (material >= 1 && material <= 133) {
+            relevantMaterials[material - 1] = true;
+        }
     }
     return loadMaterialTables(relevantMaterials);
 }
