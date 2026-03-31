@@ -46,7 +46,7 @@ RAYX_FN_ACC int RAYX_API getCromerEntryCount(int material, const int* materialIn
 
 RAYX_FN_ACC int RAYX_API getMolecEntryCount(int material, const int* materialIndices);
 
-RAYX_FN_ACC PalikEntry RAYX_API getPalikEntry(int index, int material, const int* materialIndices, const double* materialTable);
+RAYX_FN_ACC NKEntry RAYX_API getPalikEntry(int index, int material, const int* materialIndices, const double* materialTable);
 
 RAYX_FN_ACC NKEntry RAYX_API getNffEntry(int index, int material, const int* materialIndices, const double* materialTable);
 
@@ -57,5 +57,8 @@ RAYX_FN_ACC NKEntry RAYX_API getMolecEntry(int index, int material, const int* m
 // returns dvec2 to represent a complex number
 RAYX_FN_ACC complex::Complex RAYX_API getRefractiveIndex(double energy, int material, const int* materialIndices, const double* materialTable);
 
+// linear interpolation 
+// helper function to interpolate MaterialTable entries. assumes that 'energy' is between 'low' and 'high'!
+RAYX_FN_ACC NKEntry interpolateMaterialTableEntry(NKEntry low, NKEntry high, double energy);
 
 }  // namespace rayx

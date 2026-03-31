@@ -51,5 +51,3 @@ glm::dvec2 getAtomicMassAndRho(int material);
 
 void MaterialToNameMap();
 }  // namespace rayx
-
-}// namespace RAYX
