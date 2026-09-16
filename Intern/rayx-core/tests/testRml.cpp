@@ -1,3 +1,4 @@
+#include "Beamline/StringConversion.h"
 #include "setupTests.h"
 
 TEST_F(TestSuite, allBeamlineObjects) {
@@ -240,4 +241,16 @@ TEST_F(TestSuite, groupTransform2) {
 
     CHECK_EQ(orientationCorrect, orientationResult);
     CHECK_EQ(positionCorrect, positionResult);
+}
+
+TEST_F(TestSuite, elementTypeStringMappings) {
+    for (int i = 0; i < static_cast<int>(ElementType::Count); ++i) {
+        const auto e       = static_cast<ElementType>(i);
+        const auto forward = ElementTypeToString.find(e);
+        ASSERT_NE(forward, ElementTypeToString.end());
+        const auto backward = StringToElementType.find(forward->second);
+        ASSERT_NE(backward, StringToElementType.end());
+        EXPECT_EQ(backward->second, e);
+    }
+    EXPECT_EQ(ElementTypeToString.size(), static_cast<size_t>(ElementType::Count));
 }
