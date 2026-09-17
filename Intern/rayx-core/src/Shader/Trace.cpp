@@ -75,7 +75,7 @@ void traceNonSequential(const int gid, const ConstState& __restrict constState, 
         if (isRayTerminated(ray.event_type)) break;
 
         const auto col = findCollisionWithElements(ray.position, ray.direction, constState.elements, constState.objectTransforms,
-                                                   constState.numSources, constState.numElements, ray.rand);
+                                                   constState.numSources, constState.numElements, ray.rand, ray.object_id - constState.numSources);
 
         // no element was hit. tracing is done!
         if (!col) break;
@@ -97,7 +97,7 @@ void traceNonSequential(const int gid, const ConstState& __restrict constState, 
         if (hitIndex == maxElementEvents - 1 && !isRayTerminated(ray.event_type)) {
             // still something to hit?
             if (findCollisionWithElements(ray.position, ray.direction, constState.elements, constState.objectTransforms, constState.numSources,
-                                          constState.numElements, ray.rand))
+                                          constState.numElements, ray.rand, ray.object_id - constState.numSources))
                 ray.event_type = EventType::TooManyEvents;
         }
 
